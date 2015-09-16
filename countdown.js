@@ -72,6 +72,9 @@ module.exports = function(ferd) {
     minutes = parseInt(minutes);
     seconds = parseInt(seconds);
 
+    if(!minutes) {minutes = 0;}
+    if(!seconds) {seconds = 0;}
+
     var totalSeconds = (minutes*60) + seconds;
     var timeRemaining = totalSeconds;
 
@@ -121,7 +124,7 @@ module.exports = function(ferd) {
 
   ferd.listen(/countdown stop/i, function(response) {
     clearInterval(timerInterval);
-    response.send('Countdown stopped at ' + timeString);
+    response.send('Timer stopped at ' + timeString);
   });
 
 };
