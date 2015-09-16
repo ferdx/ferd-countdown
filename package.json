@@ -1,0 +1,21 @@
+{
+  "name": "ferd-countdown",
+  "version": "0.0.1",
+  "description": "A countdown module for Ferd the Slackbot",
+  "main": "countdown.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ferdx/ferd-countdown.git"
+  },
+  "keywords": [
+    "ferd",
+    "slackbot",
+    "countdown"
+  ],
+  "author": "Nick Salloum <nick@callmenick.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ferdx/ferd-countdown/issues"
+  },
+  "homepage": "https://github.com/ferdx/ferd-countdown#readme"
+}
