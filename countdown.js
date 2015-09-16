@@ -121,7 +121,7 @@ module.exports = function(ferd) {
 
   ferd.listen(/countdown stop/i, function(response) {
     clearInterval(timerInterval);
-    response.send('Timer stopped at ' + timeString);
+    response.send('Countdown stopped at ' + timeString);
   });
 
 };
