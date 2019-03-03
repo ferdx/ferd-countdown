@@ -1,6 +1,8 @@
 module.exports = function(ferd) {
   var timeString;
-  var timerInterval;
+  var timerInterval = setInterval(function() {},1);
+  clearInterval(timerInterval);
+  
   /**
    * Listens for `countdown` or `countdown help` matches, and sends back some
    * help to the user.
@@ -32,92 +34,95 @@ module.exports = function(ferd) {
   // re7 = /countdown\s(\d+)([ms])/i;
   
   ferd.listen(re, function(response) {
-    var sender = response.getMessageSender();
-    var matches = response.match;
+    if(timerInterval._onTimeout === null) {
+      var sender = response.getMessageSender();
+      var matches = response.match;
 
-    var minutes;
-    var seconds;
+      var minutes;
+      var seconds;
 
-    // Determine what format the user entered and calculate the amount of seconds
-    if(matches[1] && matches[2]) {
-      minutes = 0;
-      seconds = matches[1];
-    }// 5 seconds
-    else if(matches[3] && matches[4]) {
-      minutes = matches[3];
-      seconds = matches[4];
-    }// 5 minutes 5 seconds
-    else if(matches[5] && matches[6]) {
-      minutes = matches[5];
-      seconds = matches[6];
-    }// 5 minutes and 5 seconds
-    else if(matches[7] && matches[8]) {
-      minutes = matches[7];
-      seconds = 0;
-    }// 5 minutes
-    else if(matches[9] && matches[10]) {
-      minutes = matches[9];
-      seconds = matches[10];
-    }// 5:05
-    else if(matches[11] && matches[12]) {
-      minutes = matches[11];
-      seconds = matches[12];
-    }// 5m 5s
-    else if(matches[13] && matches[14]) {
-      if(matches[14] === 'm') {
-        minutes = matches[13];
-      } else {seconds = matches[13];}
-    }// 5m/s
+      // Determine what format the user entered and calculate the amount of seconds
+      if(matches[1] && matches[2]) {
+        minutes = 0;
+        seconds = matches[1];
+      }// 5 seconds
+      else if(matches[3] && matches[4]) {
+        minutes = matches[3];
+        seconds = matches[4];
+      }// 5 minutes 5 seconds
+      else if(matches[5] && matches[6]) {
+        minutes = matches[5];
+        seconds = matches[6];
+      }// 5 minutes and 5 seconds
+      else if(matches[7] && matches[8]) {
+        minutes = matches[7];
+        seconds = 0;
+      }// 5 minutes
+      else if(matches[9] && matches[10]) {
+        minutes = matches[9];
+        seconds = matches[10];
+      }// 5:05
+      else if(matches[11] && matches[12]) {
+        minutes = matches[11];
+        seconds = matches[12];
+      }// 5m 5s
+      else if(matches[13] && matches[14]) {
+        if(matches[14] === 'm') {
+          minutes = matches[13];
+        } else {seconds = matches[13];}
+      }// 5m/s
 
-    minutes = parseInt(minutes);
-    seconds = parseInt(seconds);
+      minutes = parseInt(minutes);
+      seconds = parseInt(seconds);
 
-    if(!minutes) {minutes = 0;}
-    if(!seconds) {seconds = 0;}
+      if(!minutes) {minutes = 0;}
+      if(!seconds) {seconds = 0;}
 
-    var totalSeconds = (minutes*60) + seconds;
-    var timeRemaining = totalSeconds;
+      var totalSeconds = (minutes*60) + seconds;
+      var timeRemaining = totalSeconds;
 
-    var m;
-    timeString = secondsToString(timeRemaining);
+      var m;
+      timeString = secondsToString(timeRemaining);
 
-    /**
-     * beginCountdown
-     *
-     * @description [description]
-     * @return {[type]}
-     */
-    var beginCountdown = function() {
-      timerInterval = setInterval(function() {
-        if (timeRemaining === 0) {
-          endCountdown();
-        } else {
-          timeRemaining = timeRemaining - 1;
-          timeString = secondsToString(timeRemaining);
-          response.updateMessage(m, 'Time remaining: ' + timeString);
-        }
-      }, 1000);
-    };
+      /**
+       * beginCountdown
+       *
+       * @description [description]
+       * @return {[type]}
+       */
+      var beginCountdown = function() {
+        timerInterval = setInterval(function() {
+          if (timeRemaining === 0) {
+            endCountdown();
+          } else {
+            timeRemaining = timeRemaining - 1;
+            timeString = secondsToString(timeRemaining);
+            response.updateMessage(m, 'Time remaining: ' + timeString);
+          }
+        }, 1000);
+      };
 
-    /**
-     * endCountdown
-     *
-     * @description [description]
-     * @return {[type]}
-     */
-    var endCountdown = function() {
-      clearInterval(timerInterval);
-      m.updateMessage('Time up!');
-    };
+      /**
+       * endCountdown
+       *
+       * @description [description]
+       * @return {[type]}
+       */
+      var endCountdown = function() {
+        clearInterval(timerInterval);
+        m.updateMessage('Time up!');
+        response.send('Time up!');
+      };
 
-    /**
-     * Run the style
-     */
-    if (timeRemaining <= 0) {
-      m = response.send('Sorry ' + sender.name + ', but you can only use numbers greater than 0 for the countdown! Type `countdown help` for valid countdown formats.');
-    } else {
-      m = response.send('Time remaining: ' + timeString);
-      beginCountdown();
+      /**
+       * Run the style
+       */
+      if (timeRemaining <= 0) {
+        m = response.send('Sorry ' + sender.name + ', but you can only use numbers greater than 0 for the countdown! Type `countdown help` for valid countdown formats.');
+      } else {
+        m = response.send('Time remaining: ' + timeString);
+        beginCountdown();
+      }
     }
 
   });
